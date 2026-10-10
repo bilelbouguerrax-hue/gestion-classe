@@ -1,7 +1,7 @@
 import { AppData, MultiTeacherStore, TeacherAccount } from '../types';
 import { initialMultiTeacherStore, sampleInitialData } from '../data/mockData';
 
-const API_BASE = 'http://localhost:3001/api';
+const API_BASE = '/api';
 const LOCAL_STORAGE_KEY = 'gestion_classe_multi_teachers_v1';
 
 export type SyncState = 'online' | 'saving' | 'offline';
