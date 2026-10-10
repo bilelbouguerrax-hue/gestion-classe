@@ -244,7 +244,7 @@ export const ReportsView: React.FC = () => {
         @media print {
           @page {
             size: A4 landscape !important;
-            margin: 5mm 8mm 5mm 8mm !important;
+            margin: 6mm 10mm 6mm 10mm !important;
           }
           /* Eliminate any extraneous margins from parent layout */
           body, main, #root {
@@ -267,14 +267,15 @@ export const ReportsView: React.FC = () => {
             page-break-inside: auto !important;
           }
           .print-a4-container th {
-            padding: 3px 4px !important;
-            font-size: 10px !important;
-            line-height: 1.15 !important;
+            padding: 5px 6px !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            line-height: 1.25 !important;
           }
           .print-a4-container td {
-            padding: 2.5px 4px !important;
-            font-size: 10px !important;
-            line-height: 1.15 !important;
+            padding: 4.5px 6px !important;
+            font-size: 11.5px !important;
+            line-height: 1.3 !important;
           }
           .print-a4-container tr {
             page-break-inside: avoid !important;
@@ -284,8 +285,8 @@ export const ReportsView: React.FC = () => {
             overflow: visible !important;
           }
           .print-sig-block {
-            margin-top: 8px !important;
-            padding-top: 4px !important;
+            margin-top: 14px !important;
+            padding-top: 6px !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
           }
@@ -295,10 +296,10 @@ export const ReportsView: React.FC = () => {
       {/* A4 PRINTABLE DOCUMENT CONTAINER (Exclusively Landscape) */}
       <div className="print-a4-container rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-3.5 sm:p-8 shadow-md print:border-0 print:p-0 print:shadow-none print:m-0 text-slate-900 mx-auto w-full max-w-6xl min-h-[680px] print:min-h-0">
         {/* Official Header */}
-        <div className="border-b-2 border-slate-900 pb-3 sm:pb-4 mb-3 sm:mb-6 print:pb-2 print:mb-2">
-          <div className="flex justify-between items-start text-xs print:text-[10px] font-semibold uppercase tracking-wider text-slate-600 gap-2">
+        <div className="border-b-2 border-slate-900 pb-3 sm:pb-4 mb-3 sm:mb-6 print:pb-2 print:mb-3">
+          <div className="flex justify-between items-start text-xs font-semibold uppercase tracking-wider text-slate-600 gap-2">
             <div>
-              <p className="font-bold text-slate-900 text-sm print:text-xs">{data.settings.schoolName}</p>
+              <p className="font-bold text-slate-900 text-sm">{data.settings.schoolName}</p>
               <p>Enseignant : {data.settings.teacherName}</p>
               <p>Matière : {data.settings.mainSubject}</p>
             </div>
@@ -308,8 +309,8 @@ export const ReportsView: React.FC = () => {
             </div>
           </div>
 
-          <div className="mt-2 sm:mt-4 print:mt-1 text-center">
-            <h1 className="text-base sm:text-xl print:text-sm font-black tracking-tight text-slate-900 uppercase">
+          <div className="mt-2 sm:mt-4 print:mt-1.5 text-center">
+            <h1 className="text-base sm:text-xl font-black tracking-tight text-slate-900 uppercase">
               {selectedReport === 'notes_sheet' && 'Feuille Officielle des Notes'}
               {selectedReport === 'students_list' && 'Liste Officielle des Élèves'}
               {selectedReport === 'attendance_sheet' && "Feuille d'Émargement et Présence"}
@@ -317,7 +318,7 @@ export const ReportsView: React.FC = () => {
               {selectedReport === 'discipline_sheet' && 'Registre du Suivi Disciplinaire'}
               {selectedReport === 'timetable_sheet' && "Emploi du Temps Pédagogique de l'Enseignant"}
             </h1>
-            <p className="text-xs print:text-[10px] font-bold text-slate-700 mt-0.5 sm:mt-1">
+            <p className="text-xs font-bold text-slate-700 mt-1">
               Classe : {activeClass?.name} ({activeClass?.academicLevel}) •{' '}
               {selectedGroup === 'all' ? 'Classe entière' : `Groupe ${selectedGroup}`}
               {selectedReport === 'attendance_sheet' && activeAttendanceRecord && (
@@ -641,14 +642,14 @@ export const ReportsView: React.FC = () => {
         )}
 
         {/* Official Signature Footer */}
-        <div className="print-sig-block mt-4 sm:mt-12 print:mt-2.5 flex justify-between items-center text-xs print:text-[10px] pt-2 sm:pt-4 print:pt-1 border-t border-slate-300">
+        <div className="print-sig-block mt-4 sm:mt-12 flex justify-between items-center text-xs pt-2 sm:pt-4 border-t border-slate-300">
           <div>
-            <p className="font-semibold">Signature de l'Enseignant :</p>
-            <p className="mt-4 sm:mt-10 print:mt-2 font-bold text-slate-900">{data.settings.teacherName}</p>
+            <p className="font-semibold text-slate-800">Signature de l'Enseignant :</p>
+            <p className="mt-4 sm:mt-8 font-bold text-slate-900">{data.settings.teacherName}</p>
           </div>
           <div className="text-right">
-            <p className="font-semibold">Cachet et Visa de l'Établissement :</p>
-            <div className="h-8 sm:h-12 print:h-7 w-24 sm:w-32 mt-1 border border-dashed border-slate-300 inline-block"></div>
+            <p className="font-semibold text-slate-800">Cachet et Visa de l'Établissement :</p>
+            <div className="h-10 w-28 sm:w-32 mt-1 border border-dashed border-slate-400 inline-block"></div>
           </div>
         </div>
       </div>
