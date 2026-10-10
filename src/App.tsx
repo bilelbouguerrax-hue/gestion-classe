@@ -77,7 +77,7 @@ const MainLayout: React.FC = () => {
           alertCount={unreadAlertCount}
         />
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 px-3 py-3 sm:px-6 sm:py-6 lg:p-8 max-w-7xl w-full mx-auto min-w-0 overflow-x-hidden">
           {activeTab === 'dashboard' && (
             <DashboardView onOpenAlerts={() => setIsAlertsOpen(true)} />
           )}

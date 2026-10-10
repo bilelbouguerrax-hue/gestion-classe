@@ -95,42 +95,42 @@ export const WelcomeAuthScreen: React.FC = () => {
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between antialiased selection:bg-blue-600 selection:text-white" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       {/* Top Navigation Bar */}
       <header className="w-full bg-white border-b border-slate-200/80 shadow-xs sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between">
           {/* Institution details */}
-          <div className="flex items-center gap-3.5">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-500/20">
-              <School className="h-6 w-6" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+            <div className="flex h-9 w-9 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-500/20">
+              <School className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
-            <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600 block">
+            <div className="min-w-0">
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-600 block truncate">
                 {lang === 'ar' ? 'المؤسسة التربوية' : 'Établissement Scolaire'}
               </span>
-              <h2 className="text-base sm:text-lg font-black tracking-tight text-slate-900">
+              <h2 className="text-sm sm:text-lg font-black tracking-tight text-slate-900 truncate">
                 Lycée Kalaat El Andalous
               </h2>
             </div>
           </div>
 
           {/* Actions: Language switch */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               onClick={() => setLanguage(lang === 'fr' ? 'ar' : 'fr')}
-              className="flex items-center gap-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3.5 py-1.5 text-xs font-bold text-slate-800 transition-all shadow-2xs cursor-pointer"
+              className="flex items-center gap-1.5 sm:gap-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-slate-800 transition-all shadow-2xs cursor-pointer"
             >
-              <Languages className="h-4 w-4 text-blue-600" />
-              <span>{lang === 'fr' ? 'العربية (AR)' : 'Français (FR)'}</span>
+              <Languages className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600" />
+              <span>{lang === 'fr' ? 'العربية' : 'Français'}</span>
             </button>
           </div>
         </div>
       </header>
 
       {/* Main Two-Column Layout: Left = Image, Right = Authentication Form */}
-      <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 my-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <main className="max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-12 my-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
           
           {/* LEFT SIDE (in LTR): Realistic Photo & Feature Highlights */}
           <div className="lg:col-span-7 flex flex-col items-center order-2 lg:order-1">
-            <div className="w-full relative rounded-3xl overflow-hidden border border-slate-200/90 shadow-2xl bg-white group">
+            <div className="w-full relative rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl sm:shadow-2xl bg-white group">
               {/* Realistic educational photograph */}
               <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
                 <img
@@ -142,16 +142,16 @@ export const WelcomeAuthScreen: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/85 via-slate-900/25 to-transparent pointer-events-none" />
                 
                 {/* Banner Caption */}
-                <div className="absolute bottom-4 left-4 right-4 text-white p-4 sm:p-5 rounded-2xl bg-black/45 backdrop-blur-md border border-white/10">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="px-2.5 py-0.5 rounded-md bg-blue-600 text-[10px] font-extrabold uppercase tracking-wide">
+                <div className="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-4 sm:left-4 sm:right-4 text-white p-3 sm:p-5 rounded-xl sm:rounded-2xl bg-black/55 backdrop-blur-md border border-white/10">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="px-2 py-0.5 rounded-md bg-blue-600 text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wide">
                       {lang === 'ar' ? 'فضاء الأستاذ المباشر' : 'Espace Enseignant'}
                     </span>
-                    <span className="text-xs text-slate-200 font-semibold">
+                    <span className="text-[11px] sm:text-xs text-slate-200 font-semibold truncate">
                       Lycée Kalaat El Andalous
                     </span>
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold text-white leading-snug">
+                  <h3 className="text-xs sm:text-base md:text-lg font-bold text-white leading-snug">
                     {lang === 'ar'
                       ? 'متابعة بيداغوجية حية للدفاتر والأعداد، الغيابات، وحساب المعدلات وفق المعاملات الرسمية'
                       : 'Suivi pédagogique complet : gestion de classe, absences, notes et discipline'}
@@ -160,40 +160,40 @@ export const WelcomeAuthScreen: React.FC = () => {
               </div>
 
               {/* Quick Feature Badges below the image */}
-              <div className="grid grid-cols-3 divide-x divide-slate-100 bg-white p-4 text-center">
-                <div className="p-2">
+              <div className="grid grid-cols-3 divide-x divide-slate-100 bg-white p-2.5 sm:p-4 text-center">
+                <div className="p-1 sm:p-2">
                   <div className="flex justify-center mb-1 text-blue-600">
-                    <Users className="h-5 w-5" />
+                    <Users className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
-                  <div className="text-xs font-bold text-slate-900">
-                    {lang === 'ar' ? 'فوجان متوازنان' : '2 Groupes Équilibrés'}
+                  <div className="text-[11px] sm:text-xs font-bold text-slate-900 truncate">
+                    {lang === 'ar' ? 'فوجان متوازنان' : '2 Groupes'}
                   </div>
-                  <div className="text-[11px] text-slate-500">
-                    {lang === 'ar' ? 'فرز وتوزيع آلي' : 'Tri alphabétique auto'}
+                  <div className="text-[9px] sm:text-[11px] text-slate-500 truncate">
+                    {lang === 'ar' ? 'فرز آلي' : 'Tri alphabétique'}
                   </div>
                 </div>
 
-                <div className="p-2">
+                <div className="p-1 sm:p-2">
                   <div className="flex justify-center mb-1 text-indigo-600">
-                    <Layers className="h-5 w-5" />
+                    <Layers className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
-                  <div className="text-xs font-bold text-slate-900">
-                    {lang === 'ar' ? 'مراقبة ومعدلات' : 'Contrôle & Synthèse'}
+                  <div className="text-[11px] sm:text-xs font-bold text-slate-900 truncate">
+                    {lang === 'ar' ? 'مراقبة ومعدلات' : 'Moyennes'}
                   </div>
-                  <div className="text-[11px] text-slate-500">
-                    {lang === 'ar' ? 'حساب بيداغوجي دقيق' : 'Coeff 1, 1 & 2'}
+                  <div className="text-[9px] sm:text-[11px] text-slate-500 truncate">
+                    {lang === 'ar' ? 'معامل 1، 1 و2' : 'Coeff 1, 1 & 2'}
                   </div>
                 </div>
 
-                <div className="p-2">
+                <div className="p-1 sm:p-2">
                   <div className="flex justify-center mb-1 text-emerald-600">
-                    <Award className="h-5 w-5" />
+                    <Award className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
-                  <div className="text-xs font-bold text-slate-900">
-                    {lang === 'ar' ? 'طباعة جاهزة A4' : 'Fiches A4 & Excel'}
+                  <div className="text-[11px] sm:text-xs font-bold text-slate-900 truncate">
+                    {lang === 'ar' ? 'طباعة A4' : 'Fiches A4'}
                   </div>
-                  <div className="text-[11px] text-slate-500">
-                    {lang === 'ar' ? 'تصدير وأرشفة سنوية' : 'Archives & Rapports'}
+                  <div className="text-[9px] sm:text-[11px] text-slate-500 truncate">
+                    {lang === 'ar' ? 'أرشيف وتصدير' : 'Excel & Archives'}
                   </div>
                 </div>
               </div>
@@ -268,40 +268,40 @@ export const WelcomeAuthScreen: React.FC = () => {
                           <div
                             key={tch.id}
                             onClick={() => handleSelectTeacher(tch)}
-                            className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                            className={`flex items-center justify-between p-2.5 sm:p-3.5 rounded-2xl border cursor-pointer transition-all gap-2 ${
                               isSelected
                                 ? 'border-blue-600 bg-blue-50/70 shadow-sm ring-1 ring-blue-600'
                                 : 'border-slate-200 bg-slate-50/60 hover:bg-slate-100/80 hover:border-slate-300'
                             }`}
                           >
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                               <div
-                                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl font-bold text-base text-white shadow-sm bg-gradient-to-tr ${
+                                className={`flex h-9 w-9 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base text-white shadow-sm bg-gradient-to-tr ${
                                   tch.avatarColor || 'from-blue-600 to-indigo-600'
                                 }`}
                               >
                                 {tch.name.charAt(0)}
                               </div>
-                              <div>
-                                <h4 className="text-sm font-bold text-slate-900">{tch.name}</h4>
-                                <p className="text-xs font-semibold text-blue-700">
+                              <div className="min-w-0 flex-1">
+                                <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate">{tch.name}</h4>
+                                <p className="text-[11px] sm:text-xs font-semibold text-blue-700 truncate">
                                   {tch.mainSubject}
                                 </p>
-                                <p className="text-[11px] font-medium text-slate-500">
+                                <p className="text-[10px] sm:text-[11px] font-medium text-slate-500 truncate">
                                   {tch.schoolName || 'Lycée Kalaat El Andalous'}
                                 </p>
                               </div>
                             </div>
 
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                               {tch.isPinEnabled ? (
-                                <span className="flex items-center gap-1 rounded-full bg-amber-100 border border-amber-300 px-2.5 py-1 text-[11px] font-bold text-amber-800">
+                                <span className="flex items-center gap-1 rounded-full bg-amber-100 border border-amber-300 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-[11px] font-bold text-amber-800">
                                   <Lock className="h-3 w-3 text-amber-700" />
                                   PIN
                                 </span>
                               ) : (
-                                <span className="flex items-center gap-1 rounded-full bg-emerald-100 border border-emerald-300 px-2.5 py-1 text-[11px] font-bold text-emerald-800">
-                                  {lang === 'ar' ? 'دخول مباشر' : 'Accès direct'} &rarr;
+                                <span className="flex items-center gap-1 rounded-full bg-emerald-100 border border-emerald-300 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-[11px] font-bold text-emerald-800">
+                                  {lang === 'ar' ? 'دخول' : 'Accès'} &rarr;
                                 </span>
                               )}
 
@@ -313,9 +313,9 @@ export const WelcomeAuthScreen: React.FC = () => {
                                   e.stopPropagation();
                                   setTeacherToDelete(tch);
                                 }}
-                                className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
+                                className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg sm:rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
                               >
-                                <Trash2 className="h-4 w-4" />
+                                <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                               </button>
                             </div>
                           </div>

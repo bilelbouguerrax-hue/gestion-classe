@@ -250,10 +250,10 @@ export const ReportsView: React.FC = () => {
       `}</style>
 
       {/* A4 PRINTABLE DOCUMENT CONTAINER (Exclusively Landscape) */}
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-md print:border-0 print:p-0 print:shadow-none text-slate-900 mx-auto w-full max-w-6xl min-h-[680px]">
+      <div className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-3.5 sm:p-8 shadow-md print:border-0 print:p-0 print:shadow-none text-slate-900 mx-auto w-full max-w-6xl min-h-[680px]">
         {/* Official Header */}
         <div className="border-b-2 border-slate-900 pb-4 mb-6">
-          <div className="flex justify-between items-start text-xs font-semibold uppercase tracking-wider text-slate-600">
+          <div className="flex justify-between items-start text-xs font-semibold uppercase tracking-wider text-slate-600 gap-2">
             <div>
               <p className="font-bold text-slate-900 text-sm">{data.settings.schoolName}</p>
               <p>Enseignant : {data.settings.teacherName}</p>
@@ -261,12 +261,12 @@ export const ReportsView: React.FC = () => {
             </div>
             <div className="text-right">
               <p>Année Scolaire : {data.settings.academicYear}</p>
-              <p>Date d'impression : {new Date().toLocaleDateString('fr-FR')}</p>
+              <p>Date : {new Date().toLocaleDateString('fr-FR')}</p>
             </div>
           </div>
 
           <div className="mt-4 text-center">
-            <h1 className="text-xl font-black tracking-tight text-slate-900 uppercase">
+            <h1 className="text-base sm:text-xl font-black tracking-tight text-slate-900 uppercase">
               {selectedReport === 'notes_sheet' && 'Feuille Officielle des Notes'}
               {selectedReport === 'students_list' && 'Liste Officielle des Élèves'}
               {selectedReport === 'attendance_sheet' && "Feuille d'Émargement et Présence"}
@@ -288,7 +288,8 @@ export const ReportsView: React.FC = () => {
 
         {/* 1. NOTES SHEET */}
         {selectedReport === 'notes_sheet' && (
-          <table className="w-full text-left text-xs border-collapse border border-slate-900">
+          <div className="w-full overflow-x-auto touch-pan-x">
+            <table className="w-full text-left text-xs border-collapse border border-slate-900 min-w-[650px]">
             <thead>
               <tr className="bg-slate-100 border-b border-slate-900 text-slate-900 font-bold uppercase text-[11px]">
                 <th className="border border-slate-900 p-2 text-center w-10">N°</th>
@@ -346,11 +347,13 @@ export const ReportsView: React.FC = () => {
               })}
             </tbody>
           </table>
+          </div>
         )}
 
         {/* 2. STUDENTS LIST */}
         {selectedReport === 'students_list' && (
-          <table className="w-full text-left text-xs border-collapse border border-slate-900">
+          <div className="w-full overflow-x-auto touch-pan-x">
+            <table className="w-full text-left text-xs border-collapse border border-slate-900 min-w-[650px]">
             <thead>
               <tr className="bg-slate-100 border-b border-slate-900 text-slate-900 font-bold uppercase text-[11px]">
                 <th className="border border-slate-900 p-2 text-center w-10">N°</th>
@@ -382,11 +385,13 @@ export const ReportsView: React.FC = () => {
               ))}
             </tbody>
           </table>
+          </div>
         )}
 
         {/* 3. ATTENDANCE SIGNATURE SHEET */}
         {selectedReport === 'attendance_sheet' && (
-          <table className="w-full text-left text-xs border-collapse border border-slate-900">
+          <div className="w-full overflow-x-auto touch-pan-x">
+            <table className="w-full text-left text-xs border-collapse border border-slate-900 min-w-[650px]">
             <thead>
               <tr className="bg-slate-100 border-b border-slate-900 text-slate-900 font-bold uppercase text-[11px]">
                 <th className="border border-slate-900 p-2 text-center w-10">N°</th>
@@ -453,11 +458,13 @@ export const ReportsView: React.FC = () => {
               })}
             </tbody>
           </table>
+          </div>
         )}
 
         {/* 4. ABSENCE SUMMARY */}
         {selectedReport === 'absence_summary' && (
-          <table className="w-full text-left text-xs border-collapse border border-slate-900">
+          <div className="w-full overflow-x-auto touch-pan-x">
+            <table className="w-full text-left text-xs border-collapse border border-slate-900 min-w-[650px]">
             <thead>
               <tr className="bg-slate-100 border-b border-slate-900 text-slate-900 font-bold uppercase text-[11px]">
                 <th className="border border-slate-900 p-2 text-center w-10">N°</th>
@@ -508,11 +515,13 @@ export const ReportsView: React.FC = () => {
               })}
             </tbody>
           </table>
+          </div>
         )}
 
         {/* 5. DISCIPLINE SHEET */}
         {selectedReport === 'discipline_sheet' && (
-          <table className="w-full text-left text-xs border-collapse border border-slate-900">
+          <div className="w-full overflow-x-auto touch-pan-x">
+            <table className="w-full text-left text-xs border-collapse border border-slate-900 min-w-[650px]">
             <thead>
               <tr className="bg-slate-100 border-b border-slate-900 text-slate-900 font-bold uppercase text-[11px]">
                 <th className="border border-slate-900 p-2 text-center w-10">N°</th>
@@ -547,12 +556,13 @@ export const ReportsView: React.FC = () => {
                 })}
             </tbody>
           </table>
+          </div>
         )}
 
         {/* 6. TIMETABLE SHEET */}
         {selectedReport === 'timetable_sheet' && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-6 gap-2 border border-slate-900 p-2">
+          <div className="space-y-4 overflow-x-auto touch-pan-x">
+            <div className="grid grid-cols-6 gap-2 border border-slate-900 p-2 min-w-[650px]">
               {['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'].map((day, idx) => {
                 const sessions = data.timetable
                   .filter((s) => s.dayOfWeek === idx + 1)

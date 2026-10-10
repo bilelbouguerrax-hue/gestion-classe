@@ -78,18 +78,18 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, on
     matchingDiscipline.length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/50 p-4 pt-16 backdrop-blur-xs sm:p-6 sm:pt-24 no-print">
-      <div className="relative w-full max-w-2xl rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200 overflow-hidden flex flex-col max-h-[80vh]">
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/50 p-3 pt-6 backdrop-blur-xs sm:p-6 sm:pt-24 no-print">
+      <div className="relative w-full max-w-2xl rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200 overflow-hidden flex flex-col max-h-[85vh]">
         {/* Search Input Bar */}
-        <div className="flex items-center border-b border-slate-200 px-4 py-3">
-          <Search className="h-5 w-5 text-slate-400 ms-1 me-3 shrink-0" />
+        <div className="flex items-center border-b border-slate-200 px-3 py-2.5 sm:px-4 sm:py-3">
+          <Search className="h-4 w-4 sm:h-5 sm:w-5 text-slate-400 ms-1 me-2 sm:me-3 shrink-0" />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={`${t.common.search} (Élève, classe, matière, observation...)`}
-            className="flex-1 bg-transparent text-base text-slate-800 placeholder-slate-400 outline-none"
+            placeholder={`${t.common.search}...`}
+            className="flex-1 bg-transparent text-sm sm:text-base text-slate-800 placeholder-slate-400 outline-none min-w-0"
           />
           {query && (
             <button
@@ -101,9 +101,10 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, on
           )}
           <button
             onClick={onClose}
-            className="ms-2 rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-500 hover:bg-slate-200"
+            className="ms-1.5 sm:ms-2 rounded-lg bg-slate-100 p-1.5 sm:px-2 sm:py-1 text-xs font-semibold text-slate-500 hover:bg-slate-200"
           >
-            Esc
+            <span className="hidden sm:inline">Esc</span>
+            <X className="h-4 w-4 sm:hidden" />
           </button>
         </div>
 

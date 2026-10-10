@@ -31,41 +31,41 @@ export const PedagogyAlertsModal: React.FC<PedagogyAlertsModalProps> = ({ isOpen
   const unreadCount = allAlertItemIds.filter((id) => !readAlertIds.includes(id)).length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs no-print">
-      <div className="relative w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-slate-200 flex flex-col max-h-[85vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-3 sm:p-4 backdrop-blur-xs no-print">
+      <div className="relative w-full max-w-2xl rounded-2xl bg-white p-4 sm:p-6 shadow-2xl ring-1 ring-slate-200 flex flex-col max-h-[88vh]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-100 text-rose-600">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-3 sm:pb-4 gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600">
               <AlertTriangle className="h-5 w-5" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-bold text-slate-800">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-base sm:text-lg font-bold text-slate-800 truncate">
                   {t.dashboard.pedagogicalAlerts}
                 </h3>
                 {unreadCount > 0 ? (
-                  <span className="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-bold text-rose-700">
+                  <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] sm:text-xs font-bold text-rose-700">
                     {unreadCount} non lue{unreadCount > 1 ? 's' : ''}
                   </span>
                 ) : (
-                  <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700 flex items-center gap-1">
+                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] sm:text-xs font-bold text-emerald-700 flex items-center gap-1">
                     <CheckCheck className="h-3.5 w-3.5" />
                     Toutes lues
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-500">
-                Suivi proactif des élèves nécessitant une attention particulière
+              <p className="text-[11px] sm:text-xs text-slate-500 truncate">
+                Suivi proactif des élèves nécessitant une attention
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
             {unreadCount > 0 ? (
               <button
                 onClick={() => markAllAlertsAsRead(allAlertItemIds)}
-                className="flex items-center gap-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200/80 px-3 py-1.5 text-xs font-bold text-blue-700 transition-colors cursor-pointer"
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200/80 px-3 py-1.5 text-xs font-bold text-blue-700 transition-colors cursor-pointer flex-1 sm:flex-initial"
                 title={t.dashboard.markAllAsRead}
               >
                 <CheckCheck className="h-4 w-4 text-blue-600" />
@@ -75,7 +75,7 @@ export const PedagogyAlertsModal: React.FC<PedagogyAlertsModalProps> = ({ isOpen
               readAlertIds.length > 0 && (
                 <button
                   onClick={restoreAllAlerts}
-                  className="flex items-center gap-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 px-3 py-1.5 text-xs font-bold text-slate-600 transition-colors cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 px-3 py-1.5 text-xs font-bold text-slate-600 transition-colors cursor-pointer flex-1 sm:flex-initial"
                   title={t.dashboard.restoreAlerts}
                 >
                   <RotateCcw className="h-4 w-4 text-slate-500" />
@@ -86,7 +86,7 @@ export const PedagogyAlertsModal: React.FC<PedagogyAlertsModalProps> = ({ isOpen
 
             <button
               onClick={onClose}
-              className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 cursor-pointer"
+              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 cursor-pointer shrink-0"
             >
               <X className="h-5 w-5" />
             </button>

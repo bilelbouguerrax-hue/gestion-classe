@@ -105,31 +105,31 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenAlerts }) =>
   return (
     <div className="space-y-6">
       {/* Welcome Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-800 p-6 text-white shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-800 p-4 sm:p-6 text-white shadow-xl">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <span className="inline-block rounded-full bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur-md">
+            <span className="inline-block rounded-full bg-white/20 px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold backdrop-blur-md">
               {data.settings.academicYear} • {data.settings.schoolName}
             </span>
-            <h2 className="mt-2 text-2xl font-black sm:text-3xl">
+            <h2 className="mt-2 text-xl font-black sm:text-3xl">
               {t.dashboard.welcome}, {data.settings.teacherName}
             </h2>
-            <p className="mt-1 text-sm text-blue-100 max-w-xl">
+            <p className="mt-1 text-xs sm:text-sm text-blue-100 max-w-xl">
               Espace de gestion pédagogique, suivi des présences, évaluations et accompagnement individuel de vos élèves.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2.5">
+          <div className="flex flex-col xs:flex-row gap-2 sm:gap-2.5 w-full md:w-auto">
             <button
               onClick={() => setActiveTab('attendance')}
-              className="flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-blue-600 shadow-md hover:bg-blue-50 transition-all active:scale-95"
+              className="flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs sm:text-sm font-bold text-blue-600 shadow-md hover:bg-blue-50 transition-all active:scale-95"
             >
               <CheckSquare className="h-4 w-4" />
               <span>{t.dashboard.takeAttendance}</span>
             </button>
             <button
               onClick={() => setActiveTab('grades')}
-              className="flex items-center gap-2 rounded-xl bg-blue-500/30 px-4 py-2.5 text-sm font-bold text-white backdrop-blur-md hover:bg-blue-500/40 transition-all active:scale-95 border border-white/20"
+              className="flex items-center justify-center gap-2 rounded-xl bg-blue-500/30 px-4 py-2.5 text-xs sm:text-sm font-bold text-white backdrop-blur-md hover:bg-blue-500/40 transition-all active:scale-95 border border-white/20"
             >
               <Award className="h-4 w-4" />
               <span>{t.dashboard.enterGrades}</span>
@@ -139,7 +139,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenAlerts }) =>
       </div>
 
       {/* 4 Metric Summary Cards */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Classes */}
         <div
           onClick={() => setActiveTab('classes')}
@@ -260,13 +260,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onOpenAlerts }) =>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-blue-100/60 flex items-center justify-between">
+                <div className="mt-4 pt-3 border-t border-blue-100/60 flex flex-col sm:flex-row gap-2.5 sm:items-center sm:justify-between">
                   <span className="text-xs text-slate-500">
                     Liaison directe avec l'appel de classe
                   </span>
                   <button
                     onClick={() => startAttendanceForSession(upcomingSession.id)}
-                    className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-700 transition-colors shadow-xs"
+                    className="flex items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 py-2 sm:py-1.5 text-xs font-bold text-white hover:bg-blue-700 transition-colors shadow-xs w-full sm:w-auto"
                   >
                     <CheckSquare className="h-3.5 w-3.5" />
                     <span>Faire l'appel maintenant</span>

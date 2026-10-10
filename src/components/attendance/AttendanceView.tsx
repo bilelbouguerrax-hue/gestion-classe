@@ -211,12 +211,12 @@ export const AttendanceView: React.FC = () => {
           <p className="text-xs sm:text-sm text-slate-500">{t.attendance.subtitle}</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
           {/* Mode Switcher */}
-          <div className="flex bg-slate-100 p-1 rounded-xl">
+          <div className="flex bg-slate-100 p-1 rounded-xl max-w-full overflow-x-auto shrink-0">
             <button
               onClick={() => setViewMode('sheet')}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
                 viewMode === 'sheet'
                   ? 'bg-white text-blue-600 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -226,29 +226,29 @@ export const AttendanceView: React.FC = () => {
             </button>
             <button
               onClick={() => setViewMode('history')}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
                 viewMode === 'history'
                   ? 'bg-white text-blue-600 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Historique des Séances
+              Historique
             </button>
             <button
               onClick={() => setViewMode('recap')}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
                 viewMode === 'recap'
                   ? 'bg-white text-blue-600 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Bilan Récapitulatif
+              Bilan
             </button>
           </div>
 
           <button
             onClick={handleExportExcel}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs w-full sm:w-auto"
           >
             <FileSpreadsheet className="h-4 w-4 text-emerald-600" />
             <span>Exporter</span>
@@ -344,27 +344,27 @@ export const AttendanceView: React.FC = () => {
           </div>
 
           {/* Quick Stats & Mark All Present Button */}
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-xl bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 border border-emerald-100">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 xs:flex xs:flex-wrap items-center gap-1.5 sm:gap-2 text-center">
+              <span className="rounded-xl bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 border border-emerald-100">
                 {currentPresents} Présents
               </span>
-              <span className="rounded-xl bg-rose-50 px-3 py-1.5 text-xs font-bold text-rose-700 border border-rose-100">
+              <span className="rounded-xl bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700 border border-rose-100">
                 {currentAbsents} Absents
               </span>
-              <span className="rounded-xl bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-700 border border-amber-100">
+              <span className="rounded-xl bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 border border-amber-100">
                 {currentLates} Retards
               </span>
-              <span className="rounded-xl bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700 border border-blue-100">
+              <span className="rounded-xl bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700 border border-blue-100">
                 {currentExcused} Justifiés
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col xs:flex-row items-stretch sm:items-center gap-2">
               {/* "Tous présents" button */}
               <button
                 onClick={handleMarkAllPresent}
-                className="flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition-colors shadow-2xs"
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition-colors shadow-2xs w-full xs:w-auto"
                 title="Marquer l'ensemble du groupe comme présent en 1 clic"
               >
                 <Sparkles className="h-4 w-4 text-emerald-600" />
@@ -373,7 +373,7 @@ export const AttendanceView: React.FC = () => {
 
               <button
                 onClick={handleSaveSheet}
-                className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2 text-xs font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-500/20 active:scale-95 transition-all"
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-4 sm:px-5 py-2 text-xs font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-500/20 active:scale-95 transition-all w-full xs:w-auto"
               >
                 <Save className="h-4 w-4" />
                 <span>Enregistrer l'Appel</span>

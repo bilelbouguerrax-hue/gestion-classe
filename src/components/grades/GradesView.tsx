@@ -167,12 +167,12 @@ export const GradesView: React.FC = () => {
           <p className="text-xs sm:text-sm text-slate-500">{t.grades.subtitle}</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
           {/* Sort Switcher */}
-          <div className="flex bg-slate-100 p-1 rounded-xl">
+          <div className="flex bg-slate-100 p-1 rounded-xl max-w-full overflow-x-auto shrink-0">
             <button
               onClick={() => setSortBy('alpha')}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
                 sortBy === 'alpha'
                   ? 'bg-white text-blue-600 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -182,7 +182,7 @@ export const GradesView: React.FC = () => {
             </button>
             <button
               onClick={() => setSortBy('rank')}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
                 sortBy === 'rank'
                   ? 'bg-white text-blue-600 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -192,21 +192,23 @@ export const GradesView: React.FC = () => {
             </button>
           </div>
 
-          <button
-            onClick={handleExportExcel}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
-          >
-            <FileSpreadsheet className="h-4 w-4 text-emerald-600" />
-            <span>{t.common.exportExcel}</span>
-          </button>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              onClick={handleExportExcel}
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs flex-1 sm:flex-initial"
+            >
+              <FileSpreadsheet className="h-4 w-4 text-emerald-600" />
+              <span>{t.common.exportExcel}</span>
+            </button>
 
-          <button
-            onClick={() => window.print()}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
-          >
-            <Printer className="h-4 w-4 text-slate-600" />
-            <span>{t.common.print}</span>
-          </button>
+            <button
+              onClick={() => window.print()}
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs flex-1 sm:flex-initial"
+            >
+              <Printer className="h-4 w-4 text-slate-600" />
+              <span>{t.common.print}</span>
+            </button>
+          </div>
         </div>
       </div>
 

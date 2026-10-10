@@ -106,35 +106,35 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
   if (!student) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs">
-      <div className="relative w-full max-w-3xl rounded-3xl bg-white shadow-2xl ring-1 ring-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-2.5 sm:p-4 backdrop-blur-xs">
+      <div className="relative w-full max-w-3xl rounded-2xl sm:rounded-3xl bg-white shadow-2xl ring-1 ring-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/80 px-6 py-4 no-print">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-white font-black text-lg shadow-md shadow-blue-500/20">
+        <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/80 px-3.5 py-3 sm:px-6 sm:py-4 no-print gap-2">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="flex h-9 w-9 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-blue-600 text-white font-black text-sm sm:text-lg shadow-md shadow-blue-500/20">
               {student.lastName.charAt(0)}
             </div>
-            <div>
-              <h3 className="text-lg font-black text-slate-900">
+            <div className="min-w-0">
+              <h3 className="text-sm sm:text-lg font-black text-slate-900 truncate">
                 {student.lastName} {student.firstName}
               </h3>
-              <p className="text-xs text-slate-500">
-                {studentClass?.name} • Groupe {student.group} • N° {student.orderNumber}
+              <p className="text-[11px] sm:text-xs text-slate-500 truncate">
+                {studentClass?.name} • Gr. {student.group} • N° {student.orderNumber}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-2xs"
+              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2.5 sm:px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-2xs"
             >
               <Printer className="h-4 w-4 text-slate-500" />
-              <span>Imprimer A4</span>
+              <span className="hidden xs:inline">Imprimer A4</span>
             </button>
             <button
               onClick={onClose}
-              className="rounded-xl p-2 text-slate-400 hover:bg-slate-100"
+              className="rounded-xl p-1.5 sm:p-2 text-slate-400 hover:bg-slate-100"
             >
               <X className="h-5 w-5" />
             </button>
@@ -142,7 +142,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
         </div>
 
         {/* Modal Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-3.5 sm:p-6 space-y-4 sm:space-y-6">
           {/* Printable Header only shown when printing */}
           <div className="print-only mb-6 border-b pb-4">
             <div className="flex justify-between items-center text-xs text-slate-500">

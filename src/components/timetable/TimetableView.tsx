@@ -123,12 +123,12 @@ export const TimetableView: React.FC = () => {
           <p className="text-xs sm:text-sm text-slate-500">{t.timetable.subtitle}</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
           {/* View tabs */}
-          <div className="flex bg-slate-100 p-1 rounded-xl">
+          <div className="flex bg-slate-100 p-1 rounded-xl max-w-full overflow-x-auto shrink-0">
             <button
               onClick={() => setActiveView('week')}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
                 activeView === 'week'
                   ? 'bg-white text-blue-600 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -138,7 +138,7 @@ export const TimetableView: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveView('day')}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
                 activeView === 'day'
                   ? 'bg-white text-blue-600 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -148,7 +148,7 @@ export const TimetableView: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveView('class')}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
                 activeView === 'class'
                   ? 'bg-white text-blue-600 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -158,7 +158,7 @@ export const TimetableView: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveView('group')}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
                 activeView === 'group'
                   ? 'bg-white text-blue-600 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -170,7 +170,7 @@ export const TimetableView: React.FC = () => {
 
           <button
             onClick={() => handleOpenAdd()}
-            className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-500/20 active:scale-95"
+            className="flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-500/20 active:scale-95 w-full sm:w-auto"
           >
             <Plus className="h-4 w-4" />
             <span>{t.timetable.addSession}</span>
@@ -239,9 +239,9 @@ export const TimetableView: React.FC = () => {
             return (
               <div
                 key={day.id}
-                className="rounded-2xl border border-slate-200/80 bg-white shadow-xs flex flex-col min-h-[420px]"
+                className="rounded-2xl border border-slate-200/80 bg-white shadow-xs flex flex-col min-h-[140px] sm:min-h-[400px]"
               >
-                <div className="border-b border-slate-100 bg-slate-50/75 px-4 py-3 flex items-center justify-between">
+                <div className="border-b border-slate-100 bg-slate-50/75 px-3.5 py-2.5 sm:px-4 sm:py-3 flex items-center justify-between">
                   <h3 className="font-bold text-slate-800 text-sm">{day.name}</h3>
                   <button
                     onClick={() => handleOpenAdd(day.id)}
@@ -254,7 +254,7 @@ export const TimetableView: React.FC = () => {
 
                 <div className="p-3 space-y-3 flex-1 overflow-y-auto">
                   {daySessions.length === 0 ? (
-                    <div className="py-12 text-center text-[11px] text-slate-400">
+                    <div className="py-6 sm:py-12 text-center text-[11px] text-slate-400">
                       Aucune séance
                     </div>
                   ) : (
