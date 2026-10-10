@@ -11,9 +11,25 @@
 
 /* Print specific styles for A4 export and clean reports */
 @media print {
-  body {
+  @page {
+    size: A4 landscape !important;
+    margin: 5mm 8mm 5mm 8mm !important;
+  }
+  html, body {
     background: white !important;
     color: black !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    max-width: none !important;
+  }
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
   }
   .no-print {
     display: none !important;
@@ -25,9 +41,12 @@
     page-break-before: always;
     break-before: page;
   }
-  @page {
-    size: A4 landscape;
-    margin: 10mm 12mm 10mm 12mm;
+  table {
+    page-break-inside: auto;
+  }
+  tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }
 
