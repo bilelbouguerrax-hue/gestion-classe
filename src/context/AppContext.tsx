@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   ActiveTab,
   AppData,
@@ -89,13 +89,44 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const AUTH_TEACHER_KEY = 'gestion_classe_current_teacher_id';
+const LOCAL_STORAGE_KEY = 'gestion_classe_multi_teachers_v1';
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [multiStore, setMultiStore] = useState<MultiTeacherStore>(initialMultiTeacherStore);
-  
+  // Initialize multiStore directly from localStorage if present
+  const [multiStore, setMultiStoreState] = useState<MultiTeacherStore>(() => {
+    try {
+      const local = typeof window !== 'undefined' ? localStorage.getItem(LOCAL_STORAGE_KEY) : null;
+      if (local) {
+        const parsed = JSON.parse(local);
+        if (parsed && Array.isArray(parsed.teachers) && parsed.teacherData) {
+          return parsed;
+        }
+      }
+    } catch {}
+    return initialMultiTeacherStore;
+  });
+
+  const multiStoreRef = useRef<MultiTeacherStore>(multiStore);
+  const setMultiStore = useCallback(
+    (valOrFn: MultiTeacherStore | ((prev: MultiTeacherStore) => MultiTeacherStore)) => {
+      setMultiStoreState((prev) => {
+        const next = typeof valOrFn === 'function' ? valOrFn(prev) : valOrFn;
+        multiStoreRef.current = next;
+        return next;
+      });
+    },
+    []
+  );
+
   // Restore persisted session from localStorage if present
   const initialSavedTeacherId = typeof window !== 'undefined' ? localStorage.getItem(AUTH_TEACHER_KEY) : null;
-  const [activeTeacherId, setActiveTeacherId] = useState<string>(initialSavedTeacherId || '');
+  const [activeTeacherId, setActiveTeacherIdState] = useState<string>(initialSavedTeacherId || '');
+  const activeTeacherIdRef = useRef<string>(activeTeacherId);
+  const setActiveTeacherId = useCallback((id: string) => {
+    activeTeacherIdRef.current = id;
+    setActiveTeacherIdState(id);
+  }, []);
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(Boolean(initialSavedTeacherId));
   const [isTeacherSelectorOpen, setIsTeacherSelectorOpen] = useState(false);
 
@@ -156,13 +187,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setSelectedClassId(currentTeacherData.classes[0].id);
         }
       } else {
-        setMultiStore(initialMultiTeacherStore);
-        setActiveTeacherId('');
-        setIsAuthenticated(false);
-        try {
-          localStorage.removeItem(AUTH_TEACHER_KEY);
-        } catch {}
-        await saveMultiTeacherStore(initialMultiTeacherStore);
+        // If the server/loaded store is empty, but we already have teachers in state/ref (e.g. user just created one), keep them!
+        if (multiStoreRef.current.teachers && multiStoreRef.current.teachers.length > 0) {
+          // Push local accounts to remote server
+          saveMultiTeacherStore(multiStoreRef.current).catch(console.warn);
+        } else {
+          setMultiStore(initialMultiTeacherStore);
+          setActiveTeacherId('');
+          setIsAuthenticated(false);
+          try {
+            localStorage.removeItem(AUTH_TEACHER_KEY);
+          } catch {}
+        }
       }
 
       const isServerUp = await checkServerStatus();
@@ -203,33 +239,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setSyncState('saving');
     const res = await saveMultiTeacherStore(newStore);
     setSyncState(res.isRemote ? 'online' : 'offline');
-  }, []);
+  }, [setMultiStore]);
 
   // Helper to persist only active teacher's updated workspace
   const persistTeacherData = useCallback(
     async (updatedData: AppData) => {
-      if (!activeTeacherId) return;
+      const currentTeacherId = activeTeacherIdRef.current;
+      if (!currentTeacherId) return;
+      const currentStore = multiStoreRef.current;
       const newStore: MultiTeacherStore = {
-        ...multiStore,
-        activeTeacherId,
+        ...currentStore,
+        activeTeacherId: currentTeacherId,
         teacherData: {
-          ...multiStore.teacherData,
-          [activeTeacherId]: updatedData,
+          ...currentStore.teacherData,
+          [currentTeacherId]: updatedData,
         },
       };
       await persistStore(newStore);
     },
-    [multiStore, activeTeacherId, persistStore]
+    [persistStore]
   );
 
   // Switch teacher
   const switchTeacher = useCallback(
     (teacherId: string) => {
-      const targetTeacher = multiStore.teachers.find((t) => t.id === teacherId);
+      const currentStore = multiStoreRef.current;
+      const targetTeacher = currentStore.teachers.find((t) => t.id === teacherId);
       if (!targetTeacher) return;
 
       setActiveTeacherId(teacherId);
-      const targetData = multiStore.teacherData[teacherId];
+      const targetData = currentStore.teacherData[teacherId];
       if (targetData?.classes?.length > 0) {
         setSelectedClassId(targetData.classes[0].id);
       } else {
@@ -247,23 +286,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setActiveTab('dashboard');
 
       const updatedStore = {
-        ...multiStore,
+        ...currentStore,
         activeTeacherId: teacherId,
       };
       persistStore(updatedStore);
     },
-    [multiStore, persistStore]
+    [setActiveTeacherId, persistStore]
   );
 
   const loginTeacher = useCallback(
     (teacherId: string, pin?: string): boolean => {
-      const teacher = multiStore.teachers.find((t) => t.id === teacherId);
+      const currentStore = multiStoreRef.current;
+      const teacher = currentStore.teachers.find((t) => t.id === teacherId);
       if (!teacher) return false;
       if (teacher.isPinEnabled && pin !== undefined) {
         if (teacher.pinCode !== pin) return false;
       }
       setActiveTeacherId(teacherId);
-      const tData = multiStore.teacherData[teacherId];
+      const tData = currentStore.teacherData[teacherId];
       if (tData?.classes?.length > 0) {
         setSelectedClassId(tData.classes[0].id);
       } else {
@@ -279,7 +319,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       return true;
     },
-    [multiStore]
+    [setActiveTeacherId]
   );
 
   const logout = useCallback(() => {
@@ -330,11 +370,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         archives: [],
       };
 
+      const currentStore = multiStoreRef.current;
       const updatedStore: MultiTeacherStore = {
-        teachers: [...multiStore.teachers, newTeacher],
+        teachers: [...currentStore.teachers, newTeacher],
         activeTeacherId: newId,
         teacherData: {
-          ...multiStore.teacherData,
+          ...currentStore.teacherData,
           [newId]: newWorkspaceData,
         },
       };
@@ -351,14 +392,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       persistStore(updatedStore);
     },
-    [multiStore, persistStore]
+    [globalLang, setActiveTeacherId, persistStore]
   );
 
   // Delete teacher
   const deleteTeacher = useCallback(
     (teacherId: string) => {
-      const remainingTeachers = multiStore.teachers.filter((t) => t.id !== teacherId);
-      const remainingData = { ...multiStore.teacherData };
+      const currentStore = multiStoreRef.current;
+      const remainingTeachers = currentStore.teachers.filter((t) => t.id !== teacherId);
+      const remainingData = { ...currentStore.teacherData };
       delete remainingData[teacherId];
 
       const nextId = remainingTeachers.length > 0 ? remainingTeachers[0].id : '';
@@ -381,7 +423,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setActiveTeacherId(nextId);
       persistStore(updatedStore);
     },
-    [multiStore, persistStore]
+    [setActiveTeacherId, persistStore]
   );
 
   // Lock and PIN
@@ -418,11 +460,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         localStorage.setItem('gestion_classe_lang', newLang);
       } catch {}
-      if (activeTeacherId && multiStore.teacherData[activeTeacherId]) {
+      const currentTeacherId = activeTeacherIdRef.current;
+      const currentStore = multiStoreRef.current;
+      if (currentTeacherId && currentStore.teacherData[currentTeacherId]) {
         const updated = {
-          ...multiStore.teacherData[activeTeacherId],
+          ...currentStore.teacherData[currentTeacherId],
           settings: {
-            ...multiStore.teacherData[activeTeacherId].settings,
+            ...currentStore.teacherData[currentTeacherId].settings,
             language: newLang,
           },
         };
@@ -431,7 +475,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
       document.documentElement.lang = newLang;
     },
-    [activeTeacherId, multiStore.teacherData, persistTeacherData]
+    [persistTeacherData]
   );
 
   useEffect(() => {
@@ -460,16 +504,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Settings update
   const updateSettings = useCallback(
     (newSettings: Partial<AppSettings>) => {
+      const currentTeacherId = activeTeacherIdRef.current;
+      if (!currentTeacherId) return;
+      const currentStore = multiStoreRef.current;
+      const currentTeacherData = currentStore.teacherData[currentTeacherId] || sampleInitialData;
+
       const updated = {
-        ...activeTeacherData,
+        ...currentTeacherData,
         settings: {
-          ...activeTeacherData.settings,
+          ...currentTeacherData.settings,
           ...newSettings,
         },
       };
       // Also update teacher profile in store
-      const updatedTeachers = multiStore.teachers.map((t) =>
-        t.id === activeTeacherId
+      const updatedTeachers = currentStore.teachers.map((t) =>
+        t.id === currentTeacherId
           ? {
               ...t,
               name: newSettings.teacherName || t.name,
@@ -484,15 +533,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       const newStore = {
         teachers: updatedTeachers,
-        activeTeacherId,
+        activeTeacherId: currentTeacherId,
         teacherData: {
-          ...multiStore.teacherData,
-          [activeTeacherId]: updated,
+          ...currentStore.teacherData,
+          [currentTeacherId]: updated,
         },
       };
       persistStore(newStore);
     },
-    [activeTeacherData, multiStore, activeTeacherId, persistStore]
+    [persistStore]
   );
 
   // Class Actions

@@ -19,30 +19,52 @@ export async function loadMultiTeacherStore(): Promise<{
   store: MultiTeacherStore;
   isRemote: boolean;
 }> {
-  // First attempt from remote API
+  // Read local store first to compare
+  let localStore: MultiTeacherStore | null = null;
+  try {
+    const local = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (local) {
+      localStore = normalizeToMultiTeacherStore(JSON.parse(local));
+    }
+  } catch (err) {
+    console.error('Failed to parse local storage data', err);
+  }
+
+  // Attempt from remote API
   try {
     const res = await fetch(`${API_BASE}/data`, { signal: AbortSignal.timeout(3000) });
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.data) {
-        const parsed = normalizeToMultiTeacherStore(json.data);
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsed));
-        return { store: parsed, isRemote: true };
+        const remoteStore = normalizeToMultiTeacherStore(json.data);
+
+        // If local store has teachers but remote server is empty (e.g. server restarted or newly deployed)
+        // do NOT wipe local accounts! Sync local store up to the remote server.
+        if (
+          localStore &&
+          localStore.teachers &&
+          localStore.teachers.length > 0 &&
+          (!remoteStore.teachers || remoteStore.teachers.length === 0)
+        ) {
+          // Push local store to server asynchronously
+          saveMultiTeacherStore(localStore).catch((e) =>
+            console.warn('Background sync of local accounts to server failed:', e)
+          );
+          return { store: localStore, isRemote: true };
+        }
+
+        // Remote has data (or both are empty), update local cache
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(remoteStore));
+        return { store: remoteStore, isRemote: true };
       }
     }
   } catch (err) {
     console.warn('Backend server unreachable, falling back to local storage', err);
   }
 
-  // Fallback to localStorage
-  try {
-    const local = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (local) {
-      const parsed = normalizeToMultiTeacherStore(JSON.parse(local));
-      return { store: parsed, isRemote: false };
-    }
-  } catch (err) {
-    console.error('Failed to parse local storage data', err);
+  // Fallback to local storage
+  if (localStore) {
+    return { store: localStore, isRemote: false };
   }
 
   return { store: initialMultiTeacherStore, isRemote: false };
