@@ -137,9 +137,9 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Logged-in Teacher Info Badge */}
         <div className="hidden sm:flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-bold text-slate-700 shadow-2xs">
           <div className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] text-white">
-            {activeTeacher?.name.charAt(0) || 'E'}
+            {activeTeacher?.name ? activeTeacher.name.charAt(0) : 'E'}
           </div>
-          <span className="hidden lg:inline max-w-[120px] truncate">{activeTeacher?.name}</span>
+          <span className="hidden lg:inline max-w-[120px] truncate">{activeTeacher?.name || 'Enseignant'}</span>
         </div>
 
         {/* Language Switcher */}

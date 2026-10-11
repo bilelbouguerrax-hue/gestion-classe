@@ -95,7 +95,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   
   // Restore persisted session from localStorage if present
   const initialSavedTeacherId = typeof window !== 'undefined' ? localStorage.getItem(AUTH_TEACHER_KEY) : null;
-  const [activeTeacherId, setActiveTeacherId] = useState<string>(initialSavedTeacherId || 'teacher-1');
+  const [activeTeacherId, setActiveTeacherId] = useState<string>(initialSavedTeacherId || '');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(Boolean(initialSavedTeacherId));
   const [isTeacherSelectorOpen, setIsTeacherSelectorOpen] = useState(false);
 
@@ -149,6 +149,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setSelectedClassId(currentTeacherData.classes[0].id);
         }
       } else {
+        setMultiStore(initialMultiTeacherStore);
+        setActiveTeacherId('');
+        setIsAuthenticated(false);
+        try {
+          localStorage.removeItem(AUTH_TEACHER_KEY);
+        } catch {}
         await saveMultiTeacherStore(initialMultiTeacherStore);
       }
 
@@ -173,7 +179,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Active teacher and their isolated data
   const activeTeacher = useMemo(() => {
-    return multiStore.teachers.find((t) => t.id === activeTeacherId) || multiStore.teachers[0] || null;
+    if (!activeTeacherId) return null;
+    return multiStore.teachers.find((t) => t.id === activeTeacherId) || null;
   }, [multiStore.teachers, activeTeacherId]);
 
   const activeTeacherData: AppData = useMemo(() => {
@@ -341,21 +348,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Delete teacher
   const deleteTeacher = useCallback(
     (teacherId: string) => {
-      if (multiStore.teachers.length <= 1) {
-        const isAr = activeTeacherData?.settings?.language === 'ar';
-        alert(
-          isAr
-            ? 'لا يمكن حذف الحساب الوحيد المتبقي في المنظومة.'
-            : 'Impossible de supprimer le seul enseignant restant dans le système.'
-        );
-        return;
-      }
-
       const remainingTeachers = multiStore.teachers.filter((t) => t.id !== teacherId);
       const remainingData = { ...multiStore.teacherData };
       delete remainingData[teacherId];
 
-      const nextId = remainingTeachers[0].id;
+      const nextId = remainingTeachers.length > 0 ? remainingTeachers[0].id : '';
       const updatedStore: MultiTeacherStore = {
         teachers: remainingTeachers,
         activeTeacherId: nextId,
@@ -364,7 +361,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       try {
         const savedLoggedInTeacherId = localStorage.getItem(AUTH_TEACHER_KEY);
-        if (savedLoggedInTeacherId === teacherId) {
+        if (savedLoggedInTeacherId === teacherId || remainingTeachers.length === 0) {
           localStorage.removeItem(AUTH_TEACHER_KEY);
           setIsAuthenticated(false);
         }
@@ -375,7 +372,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setActiveTeacherId(nextId);
       persistStore(updatedStore);
     },
-    [multiStore, persistStore, activeTeacherData]
+    [multiStore, persistStore]
   );
 
   // Lock and PIN

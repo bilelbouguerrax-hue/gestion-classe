@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { TeacherAccount } from '../../types';
 import {
@@ -31,12 +31,27 @@ export const WelcomeAuthScreen: React.FC = () => {
 
   const [teacherToDelete, setTeacherToDelete] = useState<TeacherAccount | null>(null);
 
-  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  const [activeTab, setActiveTab] = useState<'login' | 'register'>(
+    allTeachers.length > 0 ? 'login' : 'register'
+  );
+
+  useEffect(() => {
+    if (allTeachers.length === 0) {
+      setActiveTab('register');
+    }
+  }, [allTeachers.length]);
 
   // Login states
   const [selectedTeacherId, setSelectedTeacherId] = useState<string>(
     allTeachers[0]?.id || ''
   );
+
+  useEffect(() => {
+    if (allTeachers.length > 0 && !allTeachers.some((t) => t.id === selectedTeacherId)) {
+      setSelectedTeacherId(allTeachers[0].id);
+    }
+  }, [allTeachers, selectedTeacherId]);
+
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
@@ -254,130 +269,156 @@ export const WelcomeAuthScreen: React.FC = () => {
               {/* TAB 1: LOGIN (Se connecter) */}
               {activeTab === 'login' && (
                 <div className="space-y-5">
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
-                      {lang === 'ar'
-                        ? 'اختر حساب الأستاذ للمتابعة :'
-                        : 'Sélectionnez votre compte enseignant :'}
-                    </label>
+                  {allTeachers.length === 0 ? (
+                    <div className="text-center py-8 px-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50/70">
+                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 mb-3">
+                        <UserPlus className="h-6 w-6" />
+                      </div>
+                      <h4 className="text-sm font-bold text-slate-800 mb-1">
+                        {lang === 'ar' ? 'لا يوجد حساب أستاذ مسجل حالياً' : 'Aucun compte enseignant enregistré'}
+                      </h4>
+                      <p className="text-xs text-slate-500 mb-4 max-w-xs mx-auto">
+                        {lang === 'ar'
+                          ? 'ابدأ بإنشاء حسابك الشخصي لمتابعة الأقسام والغيابات وإسناد الأعداد.'
+                          : 'Commencez par créer votre compte pour gérer vos classes, absences et notes.'}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab('register')}
+                        className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all cursor-pointer"
+                      >
+                        <UserPlus className="h-4 w-4" />
+                        <span>{lang === 'ar' ? 'إنشاء حساب جديد الآن' : 'Créer un compte maintenant'}</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                          {lang === 'ar'
+                            ? 'اختر حساب الأستاذ للمتابعة :'
+                            : 'Sélectionnez votre compte enseignant :'}
+                        </label>
 
-                    <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
-                      {allTeachers.map((tch) => {
-                        const isSelected = tch.id === selectedTeacherId;
-                        return (
-                          <div
-                            key={tch.id}
-                            onClick={() => handleSelectTeacher(tch)}
-                            className={`flex items-center justify-between p-2.5 sm:p-3.5 rounded-2xl border cursor-pointer transition-all gap-2 ${
-                              isSelected
-                                ? 'border-blue-600 bg-blue-50/70 shadow-sm ring-1 ring-blue-600'
-                                : 'border-slate-200 bg-slate-50/60 hover:bg-slate-100/80 hover:border-slate-300'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+                        <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                          {allTeachers.map((tch) => {
+                            const isSelected = tch.id === selectedTeacherId;
+                            return (
                               <div
-                                className={`flex h-9 w-9 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base text-white shadow-sm bg-gradient-to-tr ${
-                                  tch.avatarColor || 'from-blue-600 to-indigo-600'
+                                key={tch.id}
+                                onClick={() => handleSelectTeacher(tch)}
+                                className={`flex items-center justify-between p-2.5 sm:p-3.5 rounded-2xl border cursor-pointer transition-all gap-2 ${
+                                  isSelected
+                                    ? 'border-blue-600 bg-blue-50/70 shadow-sm ring-1 ring-blue-600'
+                                    : 'border-slate-200 bg-slate-50/60 hover:bg-slate-100/80 hover:border-slate-300'
                                 }`}
                               >
-                                {tch.name.charAt(0)}
+                                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+                                  <div
+                                    className={`flex h-9 w-9 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base text-white shadow-sm bg-gradient-to-tr ${
+                                      tch.avatarColor || 'from-blue-600 to-indigo-600'
+                                    }`}
+                                  >
+                                    {tch.name.charAt(0)}
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate">{tch.name}</h4>
+                                    <p className="text-[11px] sm:text-xs font-semibold text-blue-700 truncate">
+                                      {tch.mainSubject}
+                                    </p>
+                                    <p className="text-[10px] sm:text-[11px] font-medium text-slate-500 truncate">
+                                      {tch.schoolName || 'Lycée Kalaat El Andalous'}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                                  {tch.isPinEnabled ? (
+                                    <span className="flex items-center gap-1 rounded-full bg-amber-100 border border-amber-300 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-[11px] font-bold text-amber-800">
+                                      <Lock className="h-3 w-3 text-amber-700" />
+                                      PIN
+                                    </span>
+                                  ) : (
+                                    <span className="flex items-center gap-1 rounded-full bg-emerald-100 border border-emerald-300 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-[11px] font-bold text-emerald-800">
+                                      {lang === 'ar' ? 'دخول' : 'Accès'} &rarr;
+                                    </span>
+                                  )}
+
+                                  {/* Delete Teacher Account Button */}
+                                  <button
+                                    type="button"
+                                    title={lang === 'ar' ? 'حذف هذا الحساب' : 'Supprimer ce compte'}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setTeacherToDelete(tch);
+                                    }}
+                                    className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg sm:rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                  </button>
+                                </div>
                               </div>
-                              <div className="min-w-0 flex-1">
-                                <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate">{tch.name}</h4>
-                                <p className="text-[11px] sm:text-xs font-semibold text-blue-700 truncate">
-                                  {tch.mainSubject}
-                                </p>
-                                <p className="text-[10px] sm:text-[11px] font-medium text-slate-500 truncate">
-                                  {tch.schoolName || 'Lycée Kalaat El Andalous'}
-                                </p>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                              {tch.isPinEnabled ? (
-                                <span className="flex items-center gap-1 rounded-full bg-amber-100 border border-amber-300 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-[11px] font-bold text-amber-800">
-                                  <Lock className="h-3 w-3 text-amber-700" />
-                                  PIN
-                                </span>
-                              ) : (
-                                <span className="flex items-center gap-1 rounded-full bg-emerald-100 border border-emerald-300 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-[11px] font-bold text-emerald-800">
-                                  {lang === 'ar' ? 'دخول' : 'Accès'} &rarr;
-                                </span>
-                              )}
-
-                              {/* Delete Teacher Account Button */}
-                              <button
-                                type="button"
-                                title={lang === 'ar' ? 'حذف هذا الحساب' : 'Supprimer ce compte'}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setTeacherToDelete(tch);
-                                }}
-                                className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg sm:rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
-                              >
-                                <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* PIN Code Verification if selected teacher has PIN enabled */}
-                  {selectedTeacher?.isPinEnabled && (
-                    <form onSubmit={handlePinSubmit} className="pt-4 border-t border-slate-200 space-y-3">
-                      <div className="text-center">
-                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                          {lang === 'ar'
-                            ? `أدخل رمز PIN الخاص بالأستاذ ${selectedTeacher.name} :`
-                            : `Entrez le code PIN personnel de ${selectedTeacher.name} :`}
-                        </label>
-                        <input
-                          type="password"
-                          maxLength={4}
-                          required
-                          autoFocus
-                          value={pinInput}
-                          onChange={(e) => {
-                            setPinInput(e.target.value);
-                            setPinError(false);
-                          }}
-                          placeholder="••••"
-                          className="w-36 mx-auto rounded-2xl border border-slate-300 bg-white p-2.5 text-center font-mono text-xl tracking-widest text-slate-900 shadow-inner focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                        />
-                        {pinError && (
-                          <p className="mt-1.5 text-xs font-bold text-rose-600">
-                            {lang === 'ar'
-                              ? 'رمز PIN غير صحيح. يرجى إعادة المحاولة.'
-                              : 'Code PIN incorrect. Veuillez réessayer.'}
-                          </p>
-                        )}
+                            );
+                          })}
+                        </div>
                       </div>
 
-                      <button
-                        type="submit"
-                        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-blue-600 hover:bg-blue-700 py-3 text-sm font-bold text-white shadow-md shadow-blue-500/25 transition-all cursor-pointer active:scale-98"
-                      >
-                        <KeyRound className="h-4 w-4" />
-                        <span>{lang === 'ar' ? 'تأكيد ودخول' : 'Valider et continuer'}</span>
-                      </button>
-                    </form>
-                  )}
+                      {/* PIN Code Verification if selected teacher has PIN enabled */}
+                      {selectedTeacher?.isPinEnabled && (
+                        <form onSubmit={handlePinSubmit} className="pt-4 border-t border-slate-200 space-y-3">
+                          <div className="text-center">
+                            <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                              {lang === 'ar'
+                                ? `أدخل رمز PIN الخاص بالأستاذ ${selectedTeacher.name} :`
+                                : `Entrez le code PIN personnel de ${selectedTeacher.name} :`}
+                            </label>
+                            <input
+                              type="password"
+                              maxLength={4}
+                              required
+                              autoFocus
+                              value={pinInput}
+                              onChange={(e) => {
+                                setPinInput(e.target.value);
+                                setPinError(false);
+                              }}
+                              placeholder="••••"
+                              className="w-36 mx-auto rounded-2xl border border-slate-300 bg-white p-2.5 text-center font-mono text-xl tracking-widest text-slate-900 shadow-inner focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                            />
+                            {pinError && (
+                              <p className="mt-1.5 text-xs font-bold text-rose-600">
+                                {lang === 'ar'
+                                  ? 'رمز PIN غير صحيح. يرجى إعادة المحاولة.'
+                                  : 'Code PIN incorrect. Veuillez réessayer.'}
+                              </p>
+                            )}
+                          </div>
 
-                  {!selectedTeacher?.isPinEnabled && selectedTeacher && (
-                    <button
-                      type="button"
-                      onClick={() => handleSelectTeacher(selectedTeacher)}
-                      className="w-full flex items-center justify-center gap-2 rounded-2xl bg-blue-600 hover:bg-blue-700 py-3 text-sm font-bold text-white shadow-md shadow-blue-500/25 transition-all cursor-pointer active:scale-98"
-                    >
-                      <span>
-                        {lang === 'ar'
-                          ? `الدخول باسم ${selectedTeacher.name}`
-                          : `Ouvrir l'espace de ${selectedTeacher.name}`}
-                      </span>
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
+                          <button
+                            type="submit"
+                            className="w-full flex items-center justify-center gap-2 rounded-2xl bg-blue-600 hover:bg-blue-700 py-3 text-sm font-bold text-white shadow-md shadow-blue-500/25 transition-all cursor-pointer active:scale-98"
+                          >
+                            <KeyRound className="h-4 w-4" />
+                            <span>{lang === 'ar' ? 'تأكيد ودخول' : 'Valider et continuer'}</span>
+                          </button>
+                        </form>
+                      )}
+
+                      {!selectedTeacher?.isPinEnabled && selectedTeacher && (
+                        <button
+                          type="button"
+                          onClick={() => handleSelectTeacher(selectedTeacher)}
+                          className="w-full flex items-center justify-center gap-2 rounded-2xl bg-blue-600 hover:bg-blue-700 py-3 text-sm font-bold text-white shadow-md shadow-blue-500/25 transition-all cursor-pointer active:scale-98"
+                        >
+                          <span>
+                            {lang === 'ar'
+                              ? `الدخول باسم ${selectedTeacher.name}`
+                              : `Ouvrir l'espace de ${selectedTeacher.name}`}
+                          </span>
+                          <ArrowRight className="h-4 w-4" />
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               )}

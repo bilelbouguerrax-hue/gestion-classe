@@ -251,7 +251,7 @@ export const translations = {
       pinCode: 'Code PIN à 4 chiffres',
       manualBackup: 'Télécharger une sauvegarde complète (JSON)',
       restoreFile: 'Restaurer depuis un fichier de sauvegarde',
-      resetToDemo: 'Réinitialiser avec les données de démonstration',
+      resetToDemo: 'Réinitialiser et vider les données (Espace vierge)',
     },
   },
 
@@ -505,7 +505,7 @@ export const translations = {
       pinCode: 'الرمز السري (4 أرقام)',
       manualBackup: 'تحميل نسخة احتياطية كاملة (JSON)',
       restoreFile: 'استرجاع البيانات من ملف احتياطي',
-      resetToDemo: 'إعادة تعيين البيانات النموذجية الأولية',
+      resetToDemo: 'مسح وتفريغ البيانات للبدء من جديد (مساحة فارغة)',
     },
   },
 };

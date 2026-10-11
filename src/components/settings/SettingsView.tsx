@@ -448,11 +448,11 @@ export const SettingsView: React.FC = () => {
           <button
             type="button"
             onClick={() => {
-              if (
-                confirm(
-                  'Voulez-vous réinitialiser toutes les données avec le jeu de test démonstration complet ?'
-                )
-              ) {
+              const isAr = data.settings.language === 'ar';
+              const msg = isAr
+                ? 'هل أنت متأكد من رغبتك في تفريغ ومسح جميع بيانات هذا الحساب (الأقسام، التلاميذ، الأعداد والغيابات) للبدء من جديد؟'
+                : 'Voulez-vous vraiment vider toutes les données de cet espace enseignant (classes, élèves, notes et présences) pour repartir à zéro ?';
+              if (confirm(msg)) {
                 resetToDemoData();
               }
             }}

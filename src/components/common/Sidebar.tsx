@@ -80,14 +80,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           <div className="rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50/60 p-3.5 border border-blue-100/60">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white shadow-xs">
-                {data.settings.teacherName.charAt(0) || 'E'}
+                {data.settings.teacherName ? data.settings.teacherName.charAt(0) : 'E'}
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold text-slate-900">
-                  {data.settings.teacherName}
+                  {data.settings.teacherName || 'Enseignant'}
                 </p>
                 <p className="truncate text-xs font-medium text-blue-600">
-                  {data.settings.mainSubject}
+                  {data.settings.mainSubject || data.settings.schoolName || 'Lycée Kalaat El Andalous'}
                 </p>
               </div>
             </div>
