@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
             <GraduationCap className="h-4 w-4 sm:h-6 sm:w-6" />
           </div>
           <div className="min-w-0">
-            <h1 className="text-xs xs:text-sm sm:text-lg font-bold text-slate-900 leading-tight tracking-tight truncate max-w-[100px] xs:max-w-[140px] sm:max-w-none">
+            <h1 className="text-xs sm:text-base md:text-lg font-bold text-slate-900 leading-normal tracking-tight truncate max-w-[140px] sm:max-w-none">
               {t.appTitle}
             </h1>
             <p className="text-xs font-medium text-slate-500 hidden sm:block">

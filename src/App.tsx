@@ -29,6 +29,7 @@ const MainLayout: React.FC = () => {
     data,
     isAuthenticated,
     readAlertIds,
+    lang,
   } = useApp();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -64,7 +65,7 @@ const MainLayout: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50 text-slate-800 antialiased">
+    <div className="flex min-h-screen bg-slate-50 text-slate-800 antialiased overflow-x-hidden" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       {/* Sidebar navigation */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 

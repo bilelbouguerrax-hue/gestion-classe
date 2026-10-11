@@ -23,7 +23,7 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
-  const { activeTab, setActiveTab, t, data, openTeacherSelector, logout } = useApp();
+  const { activeTab, setActiveTab, t, data, openTeacherSelector, logout, lang } = useApp();
 
   const navItems: Array<{ id: ActiveTab; label: string; icon: React.ElementType }> = [
     { id: 'dashboard', label: t.nav.dashboard, icon: LayoutDashboard },
@@ -55,8 +55,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
       {/* Sidebar container */}
       <aside
-        className={`fixed inset-y-0 start-0 z-50 flex w-72 max-w-[85vw] flex-col border-e border-slate-200 bg-white transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        dir={lang === 'ar' ? 'rtl' : 'ltr'}
+        className={`fixed inset-y-0 start-0 z-50 flex w-72 max-w-[85vw] flex-col border-e border-slate-200 bg-white transition-all duration-300 ease-in-out lg:static lg:translate-x-0 lg:visible lg:pointer-events-auto ${
+          isOpen
+            ? 'translate-x-0 visible pointer-events-auto shadow-2xl'
+            : lang === 'ar'
+            ? 'translate-x-full invisible pointer-events-none'
+            : '-translate-x-full invisible pointer-events-none'
         } no-print`}
       >
         {/* Mobile Header in sidebar */}
@@ -103,7 +108,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               <button
                 key={item.id}
                 onClick={() => handleSelectTab(item.id)}
-                className={`flex w-full items-center gap-3.5 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all ${
+                className={`flex w-full items-center gap-3.5 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all text-start ${
                   isActive
                     ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
                     : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'

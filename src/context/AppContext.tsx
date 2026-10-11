@@ -108,6 +108,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [viewingStudentId, setViewingStudentId] = useState<string | null>(null);
   const [activeAttendanceSessionId, setActiveAttendanceSessionId] = useState<string | null>(null);
   const [readAlertIds, setReadAlertIds] = useState<string[]>([]);
+  const [globalLang, setGlobalLang] = useState<Language>(() => {
+    try {
+      const saved = localStorage.getItem('gestion_classe_lang');
+      if (saved === 'ar' || saved === 'fr') return saved;
+    } catch {}
+    return 'ar';
+  });
 
   const markAllAlertsAsRead = useCallback((alertIds: string[]) => {
     setReadAlertIds((prev) => Array.from(new Set([...prev, ...alertIds])));
@@ -201,6 +208,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Helper to persist only active teacher's updated workspace
   const persistTeacherData = useCallback(
     async (updatedData: AppData) => {
+      if (!activeTeacherId) return;
       const newStore: MultiTeacherStore = {
         ...multiStore,
         activeTeacherId,
@@ -296,6 +304,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const newWorkspaceData: AppData = {
         settings: {
           ...initialSettings,
+          language: globalLang,
           teacherName: teacherData.name,
           schoolName: teacherData.schoolName,
           mainSubject: teacherData.mainSubject,
@@ -392,24 +401,37 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsLocked(true);
   }, []);
 
+  // Keep globalLang in sync if active logged-in teacher has a preferred language in settings
+  useEffect(() => {
+    if (activeTeacherId && multiStore.teacherData[activeTeacherId]?.settings?.language) {
+      setGlobalLang(multiStore.teacherData[activeTeacherId].settings.language);
+    }
+  }, [activeTeacherId, multiStore.teacherData]);
+
   // Language
-  const lang = activeTeacherData.settings.language || 'fr';
-  const t = translations[lang] || translations.fr;
+  const lang = globalLang;
+  const t = useMemo(() => translations[lang] || translations.ar, [lang]);
 
   const setLanguage = useCallback(
     (newLang: Language) => {
-      const updated = {
-        ...activeTeacherData,
-        settings: {
-          ...activeTeacherData.settings,
-          language: newLang,
-        },
-      };
-      persistTeacherData(updated);
+      setGlobalLang(newLang);
+      try {
+        localStorage.setItem('gestion_classe_lang', newLang);
+      } catch {}
+      if (activeTeacherId && multiStore.teacherData[activeTeacherId]) {
+        const updated = {
+          ...multiStore.teacherData[activeTeacherId],
+          settings: {
+            ...multiStore.teacherData[activeTeacherId].settings,
+            language: newLang,
+          },
+        };
+        persistTeacherData(updated);
+      }
       document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
       document.documentElement.lang = newLang;
     },
-    [activeTeacherData, persistTeacherData]
+    [activeTeacherId, multiStore.teacherData, persistTeacherData]
   );
 
   useEffect(() => {
